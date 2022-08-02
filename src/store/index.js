@@ -18,5 +18,3 @@ export const store = configureStore({
   middleware,
   devTools: process.env.NODE_ENV !== "production",
 });
-
-// export const persistor = persistStore(store);

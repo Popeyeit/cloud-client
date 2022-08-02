@@ -22,47 +22,53 @@ function NavBar({
   isAuth = false,
   avatarUrl = "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
 }) {
+  const token = localStorage.getItem("token");
   return (
     <Disclosure as="nav" className="bg-gray-800">
       {({ open }) => (
         <>
           <Container className="px-2 mx-auto sm:px-6 lg:px-8">
             <div className="relative flex items-center justify-between h-16 md:h-24">
-              <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
-                {/* Mobile menu button*/}
-                <Disclosure.Button className="inline-flex items-center justify-center p-2 text-gray-400 rounded-md hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
-                  <span className="sr-only">Open main menu</span>
-                  {open ? (
-                    <XIcon className="block w-6 h-6" aria-hidden="true" />
-                  ) : (
-                    <MenuIcon className="block w-6 h-6" aria-hidden="true" />
-                  )}
-                </Disclosure.Button>
-              </div>
-              <div className="flex items-center justify-center flex-1 sm:items-stretch sm:justify-start">
-                <div className="flex items-center flex-shrink-0">
-                  <img
-                    className="block w-auto h-8 md:hidden "
-                    src={Logo}
-                    alt="pied piper"
-                  />
-                  <img
-                    className="hidden w-auto h-16 md:block "
-                    src={Logo}
-                    alt="pied piper"
-                  />
-                  <span>
-                    <span className="text-xl font-medium text-white md:text-3xl">
-                      pied
-                    </span>
-                    <span className="text-[#019688] text-xl md:text-3xl font-medium">
-                      piper
-                    </span>
-                  </span>
+              {!isAuth && !token && (
+                <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
+                  {/* Mobile menu button*/}
+                  <Disclosure.Button className="inline-flex items-center justify-center p-2 text-gray-400 rounded-md hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+                    <span className="sr-only">Open main menu</span>
+                    {open ? (
+                      <XIcon className="block w-6 h-6" aria-hidden="true" />
+                    ) : (
+                      <MenuIcon className="block w-6 h-6" aria-hidden="true" />
+                    )}
+                  </Disclosure.Button>
                 </div>
+              )}
+
+              <div className="flex items-center justify-center flex-1 sm:items-stretch sm:justify-start">
+                <NavLink to="/">
+                  <div className="flex items-center flex-shrink-0">
+                    <img
+                      className="block w-auto h-8 md:hidden "
+                      src={Logo}
+                      alt="pied piper"
+                    />
+                    <img
+                      className="hidden w-auto h-16 md:block "
+                      src={Logo}
+                      alt="pied piper"
+                    />
+                    <span>
+                      <span className="text-xl font-medium text-white md:text-3xl">
+                        pied
+                      </span>
+                      <span className="text-[#019688] text-xl md:text-3xl font-medium">
+                        piper
+                      </span>
+                    </span>
+                  </div>
+                </NavLink>
               </div>
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                {!isAuth && (
+                {!isAuth && !token && (
                   <div className="hidden sm:block sm:ml-6">
                     <div className="flex space-x-4">
                       {navigation.map((item) => (
@@ -83,7 +89,7 @@ function NavBar({
                 )}
 
                 {/* Profile dropdown */}
-                {!isAuth && (
+                {(isAuth || token) && (
                   <Menu as="div" className="relative ml-3">
                     <div>
                       <Menu.Button className="flex text-sm bg-gray-800 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">

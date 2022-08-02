@@ -8,6 +8,7 @@ import Registration from "./pages/Registration";
 import Home from "./pages/Home";
 import { checkAuthOperation } from "./store/user";
 import PrivateRouter from "./utils/PrivateRouter";
+import PublicRouter from "./utils/PublicRouter";
 
 function App() {
   const dispatch = useDispatch();
@@ -25,10 +26,6 @@ function App() {
     }
   }, []);
 
-  if (isLoading) {
-    return <div>LOADING</div>;
-  }
-
   return (
     <Routes>
       <Route path="/" element={<Layout dispatch={dispatch} isAuth={isAuth} />}>
@@ -42,11 +39,19 @@ function App() {
         />
         <Route
           path="login"
-          element={!isAuth ? <Login /> : <Navigate to="/" replace />}
+          element={
+            <PublicRouter isAuth={isAuth} redirectPath="/">
+              <Login />
+            </PublicRouter>
+          }
         />
         <Route
           path="registration"
-          element={!isAuth ? <Registration /> : <Navigate to="/" replace />}
+          element={
+            <PublicRouter isAuth={isAuth} redirectPath="/">
+              <Registration />
+            </PublicRouter>
+          }
         />
         <Route path="*" element={<Navigate to="/" />} />
       </Route>
