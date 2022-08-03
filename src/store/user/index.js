@@ -13,9 +13,7 @@ const authSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    register: (_, { payload }) => payload,
-    login: (_, { payload }) => payload,
-    checkAuth: (_, { payload }) => payload,
+    setUser: (_, { payload }) => payload,
     logout: () => initialState,
   },
 });
@@ -24,7 +22,7 @@ export const registerOperation = (data) => async (dispatch) => {
   try {
     dispatch(setLoader(true));
     const res = await AuthService.registration(data);
-    dispatch(login({ email: res.data.user.email, isAuth: true }));
+    dispatch(setUser({ ...res.data.user, isAuth: true }));
     localStorage.setItem("token", res.data.accessToken);
   } catch (error) {
     console.log(error.response?.data?.message);
@@ -38,7 +36,7 @@ export const loginOperation = (data) => async (dispatch) => {
     dispatch(setLoader(true));
 
     const res = await AuthService.login(data);
-    dispatch(login({ email: res.data.user.email, isAuth: true }));
+    dispatch(setUser({ ...res.data.user, isAuth: true }));
     localStorage.setItem("token", res.data.accessToken);
   } catch (error) {
     console.log(error.response?.data?.message);
@@ -64,9 +62,10 @@ export const checkAuthOperation = () => async (dispatch) => {
     const res = await axios.get(`${API_URL}/auth/refresh`, {
       withCredentials: true,
     });
-    dispatch(checkAuth({ email: res.data.user.email, isAuth: true }));
+    dispatch(setUser({ ...res.data.user, isAuth: true }));
     localStorage.setItem("token", res.data.accessToken);
   } catch (error) {
+    localStorage.removeItem("token");
     console.log(error.response?.data?.message);
   } finally {
     dispatch(unsetLoader(false));
@@ -74,7 +73,7 @@ export const checkAuthOperation = () => async (dispatch) => {
 };
 
 const { actions, reducer } = authSlice;
-export const { register, login, checkAuth, logout } = actions;
+export const { setUser, logout } = actions;
 
 export default combineReducers({
   user: reducer,
