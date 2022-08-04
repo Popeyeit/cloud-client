@@ -1,12 +1,12 @@
 import React from "react";
 import File from "./File/File";
 
-function FileList({ files, onOpenDir, onPushToStack }) {
+function FileList({ files, onOpenDir, onPushToStack, onRemoveFile }) {
   return (
     <div className="mx-0 my-5">
-      <div className="grid grid-cols-4">
+      <div className="grid grid-cols-file">
         <div className="col-start-2 text-lg font-bold md:text-xl">Name</div>
-        <div className="col-start-4 text-lg font-bold justify-self-center md:text-xl">
+        <div className="col-start-5 text-lg font-bold justify-self-center md:text-xl">
           Date
         </div>
         <div className="col-start-6 text-lg font-bold justify-self-center md:text-xl">
@@ -19,6 +19,7 @@ function FileList({ files, onOpenDir, onPushToStack }) {
           file={file}
           onOpenDir={onOpenDir}
           onPushToStack={onPushToStack}
+          onRemoveFile={onRemoveFile}
         />
       ))}
     </div>

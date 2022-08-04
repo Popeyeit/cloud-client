@@ -49,6 +49,14 @@ const fileSlice = createSlice({
         dirStack: newDirStack,
       };
     },
+
+    removeFile: (state, { payload }) => {
+      return {
+        currentDir: state.currentDir,
+        dirStack: state.dirStack,
+        files: [...state.files.filter((file) => file._id != payload)],
+      };
+    },
   },
 });
 
@@ -74,8 +82,60 @@ export const createDirOperation = (dirId, name) => async (dispatch) => {
   }
 };
 
+export const uploadFileOperation = (file, dirId) => {
+  return async (dispatch) => {
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      if (dirId) {
+        formData.append("parent", dirId);
+      }
+      const res = await FileService.uploadFile(formData);
+
+      dispatch(addFile(res.data));
+    } catch (e) {
+      alert(e.res.data.message);
+    }
+  };
+};
+
+export const downloadFileOperation = async (file) => {
+  try {
+    const res = await FileService.downloadFile(file._id);
+    if (res.status === 200) {
+      const downloadUrl = window.URL.createObjectURL(res.data);
+      const link = document.createElement("a");
+      link.href = downloadUrl;
+      link.download = file.name;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    }
+  } catch (error) {
+    console.log(error.response?.data?.message);
+  }
+};
+
+export const deleteFileOperation = (file) => {
+  return async (dispatch) => {
+    try {
+      const res = await FileService.deleteFile(file._id);
+      dispatch(removeFile(file._id));
+      alert(res.data.message);
+    } catch (e) {
+      alert(e?.response?.data?.message);
+    }
+  };
+};
+
 const { actions, reducer } = fileSlice;
-export const { setFiles, setCurrentDir, addFile, pushToStack, popFromStack } =
-  actions;
+export const {
+  setFiles,
+  setCurrentDir,
+  addFile,
+  pushToStack,
+  popFromStack,
+  removeFile,
+} = actions;
 
 export default reducer;

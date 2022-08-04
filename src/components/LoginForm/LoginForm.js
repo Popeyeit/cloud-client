@@ -19,7 +19,7 @@ function LoginForm() {
   });
   const validPassword = useValidation(password, {
     isEmpty: true,
-    minLength: 5,
+    minLength: 1,
     maxLength: 16,
   });
 
