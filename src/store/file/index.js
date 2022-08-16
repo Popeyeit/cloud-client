@@ -2,17 +2,14 @@ import { createSlice } from "@reduxjs/toolkit";
 import api from "../../http";
 
 import FileService from "../../services/FileService";
-import {
-  addUploadFile,
-  changeUploadFile,
-  errorUploadFile,
-  showUploader,
-} from "../upload";
+import { setLoader } from "../loader";
+import { addUploadFile, changeUploadFile, showUploader } from "../upload";
 
 const initialState = {
   files: [],
   currentDir: null,
   dirStack: [],
+  fileView: "list",
 };
 
 const fileSlice = createSlice({
@@ -24,6 +21,7 @@ const fileSlice = createSlice({
         currentDir: state.currentDir,
         files: payload,
         dirStack: state.dirStack,
+        fileView: state.fileView,
       };
     },
     setCurrentDir: (state, { payload }) => {
@@ -31,6 +29,7 @@ const fileSlice = createSlice({
         files: state.files,
         currentDir: payload,
         dirStack: state.dirStack,
+        fileView: state.fileView,
       };
     },
     addFile: (state, { payload }) => {
@@ -38,6 +37,7 @@ const fileSlice = createSlice({
         currentDir: state.currentDir,
         dirStack: state.dirStack,
         files: [payload, ...state.files],
+        fileView: state.fileView,
       };
     },
     pushToStack: (state, { payload }) => {
@@ -45,6 +45,7 @@ const fileSlice = createSlice({
         currentDir: state.currentDir,
         files: state.files,
         dirStack: [...state.dirStack, payload],
+        fileView: state.fileView,
       };
     },
     popFromStack: (state, { payload }) => {
@@ -54,6 +55,7 @@ const fileSlice = createSlice({
         currentDir: state.currentDir,
         files: state.files,
         dirStack: newDirStack,
+        fileView: state.fileView,
       };
     },
 
@@ -62,6 +64,13 @@ const fileSlice = createSlice({
         currentDir: state.currentDir,
         dirStack: state.dirStack,
         files: [...state.files.filter((file) => file._id !== payload)],
+        fileView: state.fileView,
+      };
+    },
+    setFileView: (state, { payload }) => {
+      return {
+        ...state,
+        fileView: payload,
       };
     },
   },
@@ -69,10 +78,13 @@ const fileSlice = createSlice({
 
 export const getFilesOperation = (currentDir, sort) => async (dispatch) => {
   try {
+    dispatch(setLoader(true));
     const res = await FileService.getFiles(currentDir, sort);
     dispatch(setFiles(res.data));
   } catch (error) {
     console.log(error.response?.data?.message);
+  } finally {
+    dispatch(setLoader(false));
   }
 };
 
@@ -98,6 +110,7 @@ export const uploadFileOperation = (file, dirId) => {
       if (dirId) {
         formData.append("parent", dirId);
       }
+
       uploadFile = {
         name: file.name,
         progress: 0,
@@ -162,6 +175,19 @@ export const deleteFileOperation = (file) => {
   };
 };
 
+export const searchFileOperation = (search) => {
+  return async (dispatch) => {
+    try {
+      const res = await FileService.searchFile(search);
+      dispatch(setFiles(res.data));
+    } catch (e) {
+      alert(e?.response?.data?.message);
+    } finally {
+      dispatch(setLoader(false));
+    }
+  };
+};
+
 const { actions, reducer } = fileSlice;
 export const {
   setFiles,
@@ -170,6 +196,7 @@ export const {
   pushToStack,
   popFromStack,
   removeFile,
+  setFileView,
 } = actions;
 
 export default reducer;

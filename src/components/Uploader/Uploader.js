@@ -6,12 +6,7 @@ import UploaderFile from "./UploaderFile";
 function Uploader() {
   const dispatch = useDispatch();
 
-  const { isVisible, files } = useSelector((state) => {
-    return {
-      isVisible: state.upload.isVisible,
-      files: state.upload.files,
-    };
-  });
+  const { isVisible, files } = useSelector((state) => state.upload);
 
   const closeUploaderHandler = () => {
     dispatch(showUploader(false));

@@ -7,6 +7,8 @@ import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import Container from "../Container/Container";
 import { logoutOperation } from "../../store/user";
+import Input from "../Input/Input";
+import useSearchFile from "../../hooks/useSearchFile";
 
 const navigation = [
   { name: "Sign In", href: "/login", current: true },
@@ -17,11 +19,8 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-function NavBar({
-  dispatch,
-  isAuth = false,
-  avatarUrl = "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-}) {
+function NavBar({ dispatch, isAuth = false, avatarUrl }) {
+  const { value, onChange } = useSearchFile();
   const token = localStorage.getItem("token");
   return (
     <Disclosure as="nav" className="bg-gray-800">
@@ -87,6 +86,14 @@ function NavBar({
                     </div>
                   </div>
                 )}
+                {isAuth && token && (
+                  <Input
+                    placeholder="Search"
+                    name="search"
+                    value={value}
+                    onChange={onChange}
+                  />
+                )}
 
                 {/* Profile dropdown */}
                 {(isAuth || token) && (
@@ -96,7 +103,11 @@ function NavBar({
                         <span className="sr-only">Open user menu</span>
                         <img
                           className="w-8 h-8 rounded-full"
-                          src={avatarUrl}
+                          src={
+                            avatarUrl
+                              ? "http://localhost:5000/" + avatarUrl
+                              : "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                          }
                           alt="avatar"
                         />
                       </Menu.Button>

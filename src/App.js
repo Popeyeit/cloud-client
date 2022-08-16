@@ -6,18 +6,16 @@ import Layout from "./Layout";
 import Login from "./pages/Login";
 import Registration from "./pages/Registration";
 import Home from "./pages/Home";
+import Profile from "./pages/Profile";
 import { checkAuthOperation } from "./store/user";
 import PrivateRouter from "./utils/PrivateRouter";
 import PublicRouter from "./utils/PublicRouter";
 
+//TODO: Optimize request to redux. When going to upload/remove multiple files it calls a lot of request to redux.
+
 function App() {
   const dispatch = useDispatch();
-  const { isAuth, isLoading } = useSelector((state) => {
-    return {
-      isAuth: state.auth.user.isAuth,
-      isLoading: state.loader,
-    };
-  });
+  const { isAuth, avatar } = useSelector((state) => state.auth.user);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -25,10 +23,14 @@ function App() {
       dispatch(checkAuthOperation());
     }
   }, []);
-
   return (
     <Routes>
-      <Route path="/" element={<Layout dispatch={dispatch} isAuth={isAuth} />}>
+      <Route
+        path="/"
+        element={
+          <Layout dispatch={dispatch} isAuth={isAuth} avatarUrl={avatar} />
+        }
+      >
         <Route
           index
           element={
@@ -43,6 +45,14 @@ function App() {
             <PublicRouter isAuth={isAuth} redirectPath="/">
               <Login />
             </PublicRouter>
+          }
+        />
+        <Route
+          path="profile"
+          element={
+            <PrivateRouter isAuth={isAuth} redirectPath="login">
+              <Profile />
+            </PrivateRouter>
           }
         />
         <Route

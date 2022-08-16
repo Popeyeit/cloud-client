@@ -5,9 +5,8 @@ const loader = createSlice({
   initialState,
   reducers: {
     setLoader: (_, { payload }) => payload,
-    unsetLoader: (_, { payload }) => payload,
   },
 });
 const { actions, reducer } = loader;
-export const { setLoader, unsetLoader } = actions;
+export const { setLoader } = actions;
 export default reducer;

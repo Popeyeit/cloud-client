@@ -6,7 +6,7 @@ const initialState = {
 };
 
 const uploaderSlice = createSlice({
-  name: "uploader",
+  name: "upload",
   initialState,
   reducers: {
     showUploader: (state, { payload }) => {

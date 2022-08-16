@@ -1,8 +1,16 @@
 import React from "react";
 
-function Input({ value, type = "text", name, placeholder = "name", onChange }) {
+function Input({
+  value,
+  type = "text",
+  name,
+  placeholder = "name",
+  onChange,
+  accept = "",
+}) {
   return (
     <input
+      accept={accept}
       type={type}
       name={name}
       value={value}

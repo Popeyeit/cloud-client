@@ -1,0 +1,28 @@
+BUGS:
+1. fix email confirm.
+2. Sometimes can't remove file from uploader.
+3. Sometimes refresh doesn't work.
+
+
+
+
+TODO:
+1. Change logic fro multiple upload files on client and back.
+2. Add icons for btn (delete, create etc.)
+3. Implement delete parent (dir) with children files || dirs.
+4. Add validation to forms using custom hooks. 
+5. Create alert system for errors without block client. 
+6. Add compress for files and add visual for that.
+
+
+
+Refactoring: 
+
+
+
+Future Features:
+1. Create profile with user's info
+features: 
+- change name, password, avatar.
+- get info about space on disk.
+- ability to buy a more space for disk. 

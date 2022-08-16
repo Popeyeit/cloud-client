@@ -5,7 +5,7 @@ import Dialog from "../Dialog/Dialog";
 import CreateDirFormDialog from "../Dialog/DialogForms/CreateDirFormDialog";
 import Sort from "../Sort/Sort";
 import Uploader from "../Uploader/Uploader";
-
+//TODO: Change text in btns to icons
 function Disk({
   sort,
   onSortFiles,
@@ -13,6 +13,7 @@ function Disk({
   onOpenDir,
   onUploadFile,
   onPopFromStack,
+  onSetView,
 }) {
   const { open, cancelButtonRef, onToggle, onSubmit } = useDialog(onCreateDir);
   const dirStack = useSelector((state) => state.file.dirStack);
@@ -63,7 +64,19 @@ function Disk({
               className="hidden"
             />
           </div>
-          <Sort sort={sort} onSortFiles={onSortFiles} />
+          <div className="flex items-center">
+            <Sort sort={sort} onSortFiles={onSortFiles} />
+            <div className="flex items-center ml-6">
+              <button
+                className="w-5 h-5 mr-5 bg-center bg-no-repeat bg-contain b-none bg-multiple_square"
+                onClick={() => onSetView("plate")}
+              ></button>
+              <button
+                className="w-5 h-5 bg-center bg-no-repeat bg-contain b-none bg-list"
+                onClick={() => onSetView("list")}
+              ></button>
+            </div>
+          </div>
         </div>
       </div>
       <Dialog open={open} cancelButtonRef={cancelButtonRef} onToggle={onToggle}>

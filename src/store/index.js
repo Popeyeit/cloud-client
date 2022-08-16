@@ -6,7 +6,7 @@ import loader from "./loader";
 import upload from "./upload";
 
 const middleware = getDefaultMiddleware({
-  immutableCheck: true,
+  immutableCheck: false,
   thunk: true,
 });
 

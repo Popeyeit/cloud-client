@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Disk from "../components/Disk/Disk";
-import FileList from "../components/Disk/FileList/FileList";
+import FileList from "../components/FileList/FileList";
 import useDraAndDrop from "../hooks/useDraAndDrop";
 import {
   createDirOperation,
@@ -10,13 +10,13 @@ import {
   popFromStack,
   pushToStack,
   setCurrentDir,
+  setFileView,
   uploadFileOperation,
 } from "../store/file";
 
 function Home() {
   const dispatch = useDispatch();
-  const currentDir = useSelector((state) => state.file.currentDir);
-  const files = useSelector((state) => state.file.files);
+  const { currentDir, files, fileView } = useSelector((state) => state.file);
   const { dragEnter, onDragDrop, onDragEnter, onDragLeave } =
     useDraAndDrop(currentDir);
 
@@ -54,6 +54,10 @@ function Home() {
     setSort(value);
   };
 
+  const setFileViewHandler = (value) => {
+    dispatch(setFileView(value));
+  };
+
   return (
     <>
       {!dragEnter ? (
@@ -70,9 +74,11 @@ function Home() {
             onPopFromStack={popFromStackHandler}
             onUploadFile={uploadFileHandler}
             onSortFiles={SortFilesHandler}
+            onSetView={setFileViewHandler}
           />
           <FileList
             files={files}
+            fileView={fileView}
             onOpenDir={openDirHandler}
             onPushToStack={pushToStackHandler}
             onRemoveFile={RemoveFileHandler}

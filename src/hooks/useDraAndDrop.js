@@ -23,7 +23,7 @@ function useDraAndDrop(currentDir) {
     event.preventDefault();
     event.stopPropagation();
     let files = [...event.dataTransfer.files];
-
+    console.log("files", files);
     files.forEach((file) => dispatch(uploadFileOperation(file, currentDir)));
     setDragEnter(false);
   }, []);

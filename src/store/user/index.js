@@ -1,8 +1,8 @@
 import { createSlice, combineReducers } from "@reduxjs/toolkit";
 import axios from "axios";
 import AuthService from "../../services/AuthService";
-import { setLoader, unsetLoader } from "../loader";
 import { API_URL } from "../../http";
+import UserService from "../../services/UserService";
 
 const initialState = {
   user: {},
@@ -13,35 +13,28 @@ const authSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    setUser: (_, { payload }) => payload,
+    setUser: (state, { payload }) => payload,
     logout: () => initialState,
   },
 });
 
 export const registerOperation = (data) => async (dispatch) => {
   try {
-    dispatch(setLoader(true));
     const res = await AuthService.registration(data);
     dispatch(setUser({ ...res.data.user, isAuth: true }));
     localStorage.setItem("token", res.data.accessToken);
   } catch (error) {
     console.log(error.response?.data?.message);
-  } finally {
-    dispatch(unsetLoader(false));
   }
 };
 
 export const loginOperation = (data) => async (dispatch) => {
   try {
-    dispatch(setLoader(true));
-
     const res = await AuthService.login(data);
     dispatch(setUser({ ...res.data.user, isAuth: true }));
     localStorage.setItem("token", res.data.accessToken);
   } catch (error) {
     console.log(error.response?.data?.message);
-  } finally {
-    dispatch(unsetLoader(false));
   }
 };
 
@@ -57,8 +50,6 @@ export const logoutOperation = () => async (dispatch) => {
 
 export const checkAuthOperation = () => async (dispatch) => {
   try {
-    dispatch(setLoader(true));
-
     const res = await axios.get(`${API_URL}/auth/refresh`, {
       withCredentials: true,
     });
@@ -67,8 +58,29 @@ export const checkAuthOperation = () => async (dispatch) => {
   } catch (error) {
     localStorage.removeItem("token");
     console.log(error.response?.data?.message);
-  } finally {
-    dispatch(unsetLoader(false));
+  }
+};
+
+export const uploadAvatarOperation = (file) => async (dispatch) => {
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const res = await UserService.uploadAvatar(formData);
+
+    dispatch(setUser(res.data));
+  } catch (error) {
+    console.log(error.response?.data?.message);
+  }
+};
+
+export const deleteAvatarOperation = () => async (dispatch) => {
+  try {
+    const res = await UserService.deleteAvatar();
+
+    dispatch(setUser(res.data));
+  } catch (error) {
+    console.log(error.response?.data?.message);
   }
 };
 
