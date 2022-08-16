@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Disk from "../components/Disk/Disk";
 import FileList from "../components/Disk/FileList/FileList";
@@ -20,9 +20,11 @@ function Home() {
   const { dragEnter, onDragDrop, onDragEnter, onDragLeave } =
     useDraAndDrop(currentDir);
 
+  const [sort, setSort] = useState("type");
+
   useEffect(() => {
-    dispatch(getFilesOperation(currentDir));
-  }, [currentDir, dispatch]);
+    dispatch(getFilesOperation(currentDir, sort));
+  }, [currentDir, sort, dispatch]);
 
   const pushToStackHandler = () => {
     dispatch(pushToStack(currentDir));
@@ -44,8 +46,12 @@ function Home() {
     dispatch(uploadFileOperation(file, currentDir));
   };
 
-  const handleRemoveFile = (file) => {
+  const RemoveFileHandler = (file) => {
     dispatch(deleteFileOperation(file));
+  };
+
+  const SortFilesHandler = (value) => {
+    setSort(value);
   };
 
   return (
@@ -58,16 +64,18 @@ function Home() {
         >
           <Disk
             currentDir={currentDir}
+            sort={sort}
             onCreateDir={createDirHandler}
             onOpenDir={openDirHandler}
             onPopFromStack={popFromStackHandler}
             onUploadFile={uploadFileHandler}
+            onSortFiles={SortFilesHandler}
           />
           <FileList
             files={files}
             onOpenDir={openDirHandler}
             onPushToStack={pushToStackHandler}
-            onRemoveFile={handleRemoveFile}
+            onRemoveFile={RemoveFileHandler}
           />
         </div>
       ) : (

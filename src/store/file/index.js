@@ -1,6 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
+import api from "../../http";
 
 import FileService from "../../services/FileService";
+import {
+  addUploadFile,
+  changeUploadFile,
+  errorUploadFile,
+  showUploader,
+} from "../upload";
 
 const initialState = {
   files: [],
@@ -54,15 +61,15 @@ const fileSlice = createSlice({
       return {
         currentDir: state.currentDir,
         dirStack: state.dirStack,
-        files: [...state.files.filter((file) => file._id != payload)],
+        files: [...state.files.filter((file) => file._id !== payload)],
       };
     },
   },
 });
 
-export const getFilesOperation = (currentDir) => async (dispatch) => {
+export const getFilesOperation = (currentDir, sort) => async (dispatch) => {
   try {
-    const res = await FileService.getFiles(currentDir);
+    const res = await FileService.getFiles(currentDir, sort);
     dispatch(setFiles(res.data));
   } catch (error) {
     console.log(error.response?.data?.message);
@@ -84,17 +91,44 @@ export const createDirOperation = (dirId, name) => async (dispatch) => {
 
 export const uploadFileOperation = (file, dirId) => {
   return async (dispatch) => {
+    let uploadFile;
     try {
       const formData = new FormData();
       formData.append("file", file);
       if (dirId) {
         formData.append("parent", dirId);
       }
-      const res = await FileService.uploadFile(formData);
+      uploadFile = {
+        name: file.name,
+        progress: 0,
+        id: Date.now(),
+        error: false,
+      };
 
+      dispatch(showUploader(true));
+      dispatch(addUploadFile(uploadFile));
+      const res = await api.post("/files/upload", formData, {
+        onUploadProgress: (progressEvent) => {
+          const totalLength = progressEvent.lengthComputable
+            ? progressEvent.total
+            : progressEvent.target.getResponseHeader("content-length") ||
+              progressEvent.target.getResponseHeader(
+                "x-decompressed-content-length"
+              );
+          if (totalLength) {
+            const changedUploadFile = {
+              ...uploadFile,
+              progress: Math.round((progressEvent.loaded * 100) / totalLength),
+            };
+
+            dispatch(changeUploadFile(changedUploadFile));
+          }
+        },
+      });
       dispatch(addFile(res.data));
     } catch (e) {
-      alert(e.res.data.message);
+      dispatch(changeUploadFile({ ...uploadFile, error: true }));
+      console.log(e.response?.data?.message);
     }
   };
 };

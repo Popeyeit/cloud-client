@@ -1,5 +1,6 @@
 import React from "react";
 import File from "./File/File";
+import { TransitionGroup, CSSTransition } from "react-transition-group";
 
 function FileList({ files, onOpenDir, onPushToStack, onRemoveFile }) {
   return (
@@ -13,17 +14,25 @@ function FileList({ files, onOpenDir, onPushToStack, onRemoveFile }) {
           Size
         </div>
       </div>
-      {files.map((file) => (
-        <File
-          key={file._id}
-          file={file}
-          onOpenDir={onOpenDir}
-          onPushToStack={onPushToStack}
-          onRemoveFile={onRemoveFile}
-        />
-      ))}
+      <TransitionGroup>
+        {files.map((file) => (
+          <CSSTransition
+            key={file._id}
+            timeout={400}
+            classNames={"file"}
+            exit={false}
+          >
+            <File
+              file={file}
+              onOpenDir={onOpenDir}
+              onPushToStack={onPushToStack}
+              onRemoveFile={onRemoveFile}
+            />
+          </CSSTransition>
+        ))}
+      </TransitionGroup>
     </div>
   );
 }
 
-export default FileList;
+export default React.memo(FileList);

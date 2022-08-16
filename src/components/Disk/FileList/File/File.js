@@ -2,6 +2,7 @@ import React from "react";
 import dirImg from "../../../../assets/img/dir.svg";
 import fileImg from "../../../../assets/img/file.svg";
 import { downloadFileOperation } from "../../../../store/file";
+import { sizeFormat } from "../../../../utils/functions";
 import "./styles.css";
 //TODO: Change text in btns to icons
 function File({ file, onOpenDir, onPushToStack, onRemoveFile }) {
@@ -37,7 +38,7 @@ function File({ file, onOpenDir, onPushToStack, onRemoveFile }) {
         {file.date.slice(0, 10)}
       </div>
       <div className="col-start-6 text-lg justify-self-center md:text-xl file__size">
-        {file.size}
+        {sizeFormat(file.size)}
       </div>
       {file.type !== "dir" && (
         <button
