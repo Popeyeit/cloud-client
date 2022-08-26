@@ -35,6 +35,7 @@ api.interceptors.response.use(
         console.log(e);
       }
     }
+    // localStorage.removeItem("token");
     throw error;
   }
 );

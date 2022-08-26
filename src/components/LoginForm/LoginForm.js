@@ -1,23 +1,20 @@
-import React, { useState } from "react";
+import React from "react";
 import { useDispatch } from "react-redux";
 import { loginOperation } from "../../store/user";
 import { LockClosedIcon } from "@heroicons/react/solid";
 import Logo from "../../assets/img/navbar-logo.svg";
-import useValidation from "../../hooks/useValidation";
+import useInput from "../../hooks/useInput";
 
 function LoginForm() {
   const dispatch = useDispatch();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isDirtyEmail, setDirtyEmail] = useState(false);
-  const [isDirtyPassword, setDirtyPassword] = useState(false);
-  const validEmail = useValidation(email, {
+
+  const email = useInput("", {
     isEmpty: true,
     minLength: 3,
     maxLength: 40,
     isEmail: true,
   });
-  const validPassword = useValidation(password, {
+  const password = useInput("", {
     isEmpty: true,
     minLength: 1,
     maxLength: 16,
@@ -25,8 +22,8 @@ function LoginForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!validEmail.inputValid || !validPassword.inputValid) return;
-    dispatch(loginOperation({ email, password }));
+    if (!email.inputValid || !password.inputValid) return;
+    dispatch(loginOperation({ email: email.value, password: password.value }));
   };
 
   return (
@@ -48,53 +45,56 @@ function LoginForm() {
               <input
                 name="email"
                 type="email"
-                value={email}
+                value={email.value}
                 onChange={(e) => {
-                  setEmail(e.target.value);
+                  email.onChange(e);
                 }}
-                onBlur={(e) => setDirtyEmail(true)}
+                onBlur={(e) => {
+                  email.onBlur(e);
+                }}
                 autoComplete="email"
                 required
                 className="relative block w-full px-3 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-none appearance-none rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Email address*"
               />
-            </div>
-            <div>
-              {isDirtyEmail && validEmail.emailError && (
+              {email.isDirty && email.emailError && (
                 <p className="text-sm text-red-600"> Not correct email.</p>
               )}
-              {isDirtyEmail && validEmail.isEmpty && (
+              {email.isDirty && email.isEmpty && (
                 <p className="text-sm text-red-600"> Field can not be empty.</p>
-              )}{" "}
-              {isDirtyEmail &&
-                (validEmail.minLengthError || validEmail.maxLengthError) && (
+              )}
+              {email.isDirty &&
+                (email.minLengthError || email.maxLengthError) && (
                   <p className="text-sm text-red-600"> Not correct length.</p>
                 )}
+            </div>
+            <div>
               <label htmlFor="password" className="sr-only">
                 Password
               </label>
               <input
                 name="password"
                 type="password"
-                value={password}
+                value={password.value}
                 onChange={(e) => {
-                  setPassword(e.target.value);
+                  password.onChange(e);
                 }}
-                onBlur={(e) => setDirtyPassword(true)}
+                onBlur={(e) => {
+                  password.onBlur(e);
+                }}
                 autoComplete="current-password"
                 required
                 className="relative block w-full px-3 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-none appearance-none rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Password*"
               />
-            </div>
-            {isDirtyPassword && validPassword.isEmpty && (
-              <p className="text-sm text-red-600"> Field can not be empty.</p>
-            )}
-            {isDirtyPassword &&
-              (validPassword.minLengthError ||
-                validPassword.maxLengthError) && (
-                <p className="text-sm text-red-600"> Not correct length.</p>
+              {password.isDirty && password.isEmpty && (
+                <p className="text-sm text-red-600"> Field can not be empty.</p>
               )}
+              {password.isDirty &&
+                (password.minLengthError || password.maxLengthError) && (
+                  <p className="text-sm text-red-600"> Not correct length.</p>
+                )}
+            </div>
           </div>
 
           <div className="flex items-center justify-between">

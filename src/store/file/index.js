@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import api from "../../http";
+import { v4 as uuidv4 } from "uuid";
 
 import FileService from "../../services/FileService";
 import { setLoader } from "../loader";
@@ -106,6 +107,7 @@ export const uploadFileOperation = (file, dirId) => {
     let uploadFile;
     try {
       const formData = new FormData();
+
       formData.append("file", file);
       if (dirId) {
         formData.append("parent", dirId);
@@ -114,7 +116,7 @@ export const uploadFileOperation = (file, dirId) => {
       uploadFile = {
         name: file.name,
         progress: 0,
-        id: Date.now(),
+        id: uuidv4(),
         error: false,
       };
 

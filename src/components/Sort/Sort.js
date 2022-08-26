@@ -6,7 +6,7 @@ function Sort({ sort, onSortFiles }) {
       <select
         value={sort}
         onChange={(e) => onSortFiles(e.target.value)}
-        className="disk__select"
+        className="cursor-pointer disk__select"
       >
         <option value="name">Name</option>
         <option value="type">Type</option>

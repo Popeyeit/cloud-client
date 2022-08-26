@@ -9,6 +9,9 @@ module.exports = {
       backgroundImage: {
         multiple_square: "url('/src/assets/img/multiple_square.svg')",
         list: "url('/src/assets/img/list.svg')",
+        back: "url('/src/assets/img/back_icon.svg')",
+        delete: "url('/src/assets/img/delete_icon.svg')",
+        download: "url('/src/assets/img/download_icon.svg')",
       },
     },
   },

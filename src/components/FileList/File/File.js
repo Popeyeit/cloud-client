@@ -26,7 +26,7 @@ function File({ file, fileView, onOpenDir, onPushToStack, onRemoveFile }) {
   if (fileView === "list") {
     return (
       <div
-        className="cursor-pointer my-2.5 border-b-2 border-color-[#566885] grid grid-cols-file items-center file"
+        className=" cursor-pointer my-2.5 border-b-2 border-color-[#566885] grid grid-cols-file items-center file"
         onClick={handleClick}
       >
         <img
@@ -44,17 +44,13 @@ function File({ file, fileView, onOpenDir, onPushToStack, onRemoveFile }) {
         {file.type !== "dir" && (
           <button
             onClick={downloadClickHandler}
-            className="file__btn file__download w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md group hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 max-w-[120px]"
-          >
-            Download
-          </button>
+            className="ml-auto border border-transparent file__btn file__download group  focus:outline-none focus:ring-2 focus:ring-offset-2 hover:scale-125 w-[30px] h-[30px] bg-center bg-no-repeat bg-contain bg-download "
+          ></button>
         )}
         <button
           onClick={handleRemoveFile}
-          className="file__btn file__delete w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md group hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 max-w-[120px]"
-        >
-          Delete
-        </button>
+          className="ml-auto bg-center bg-no-repeat bg-contain border border-transparent  bg-delete file__btn file__delete group focus:outline-none focus:ring-2 focus:ring-offset-2 hover:scale-125 w-[30px] h-[30px]"
+        ></button>
       </div>
     );
   }

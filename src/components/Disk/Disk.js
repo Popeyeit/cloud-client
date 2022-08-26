@@ -38,11 +38,9 @@ function Disk({
           <div className="flex items-center">
             {!!dirStack.length && (
               <button
-                className="w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md group hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 max-w-[120px]"
+                className="w-full px-4 py-2 text-sm font-medium text-white bg-center bg-no-repeat bg-contain border border-transparent rounded-md bg-back group focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 w-[24px] h-[13px]"
                 onClick={backClickHandler}
-              >
-                Back
-              </button>
+              ></button>
             )}
             <button
               className="w-[200px] px-4 py-2 ml-3 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md group hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 max-w-[200px]"
